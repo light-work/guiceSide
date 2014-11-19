@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- the proxool configuration can be embedded within your own application's.
+	Anything outside the "proxool" tag is ignored. -->
+<something-else-entirely>
+	<proxool>
+		<!-- 配置连接池的别名 -->
+		<alias>oracle</alias>
+		<driver-url>jdbc:oracle:thin:@114.251.98.85:1521:intranet</driver-url>
+		<driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
+		<driver-properties>
+			<property name="user" value="dqy" />
+			<property name="password" value="dqy" />
+		</driver-properties>
+		<!-- proxool自动侦察各个连接状态的时间间隔(毫秒),侦察到空闲的连接就马上回收,超时的销毁 -->
+		<house-keeping-sleep-time>60000</house-keeping-sleep-time>
+		<proxool.simultaneous-build-throttle>
+			100
+		</proxool.simultaneous-build-throttle>
+		<!-- 最少保持的空闲连接数 -->
+		<prototype-count>2</prototype-count>
+		<!-- 最大连接数 -->
+		<maximum-connection-count>100</maximum-connection-count>
+		<!-- 最小连接数 -->
+		<minimum-connection-count>10</minimum-connection-count>
+		<statistics-log-level>INFO</statistics-log-level>
+		
+	</proxool>
+</something-else-entirely>

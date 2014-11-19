@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+    <tlib-version>1.1.2</tlib-version>
+    <jsp-version>2.0</jsp-version>
+    <short-name>ito</short-name>
+    <uri>form_tag</uri>
+    <description>
+		Itorgan Tag Library Descriptor
+    </description>
+
+    <!-- form tag -->
+
+    <tag>
+        <name>form</name>
+        <tag-class>org.guiceside.web.jsp.taglib.FormTag</tag-class>
+        <body-content>JSP</body-content>
+        <description>form tag</description>
+        <attribute>
+            <name>bean</name>
+        </attribute>
+        <attribute>
+            <name>scope</name>
+        </attribute>
+        <attribute>
+            <name>fromRequest</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+
+    
+
+
+</taglib>

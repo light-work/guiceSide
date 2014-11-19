@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<taglib>
+	<tlib-version>1.1.2</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>wangzhenjia</short-name>
+	<uri>guiceSide_tag</uri>
+	<description>guiceSide Tag Library Descriptor</description>
+
+
+
+	<tag>
+		<name>token</name>
+		<tag-class>
+			org.guiceside.web.jsp.taglib.Token
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>token tag</description>
+	</tag>
+	<tag>
+		<name>time</name>
+		<tag-class>
+			org.guiceside.web.jsp.taglib.Time
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>time tag</description>
+	</tag>
+	<tag>
+		<name>urlEncode</name>
+		<tag-class>
+			org.guiceside.web.jsp.taglib.UrlEncode
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>urlcode tag</description>
+		<attribute>
+			<name>url</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>property</name>
+		<tag-class>
+			org.guiceside.web.jsp.taglib.PropertyTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>Property tag</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+    <!--
+	<tag>
+		<name>usingZh</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.UsingZhSupport
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>zh tag</description>
+	</tag>
+	<tag>
+		<name>usingZhJs</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.UsingZhSupportJs
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>zhJs tag</description>
+	</tag>
+	<tag>
+		<name>usingEn</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.UsingEnSupport
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>en tag</description>
+	</tag>
+	<tag>
+		<name>usingEnJs</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.UsingEnSupportJs
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>enJs tag</description>
+	</tag>
+	<tag>
+		<name>usingKo</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.UsingKoSupport
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>ko tag</description>
+	</tag>
+	<tag>
+		<name>usingKoJs</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.UsingKoSupportJs
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>koJs tag</description>
+	</tag>
+	<tag>
+		<name>cw</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.GridColumnWidthP
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>gridColumnWidthP tag</description>
+		<attribute>
+			<name>widthP</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>textI18n</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.TextI18nTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>TextI18n tag</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>beanI18n</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.BeanI18nTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>TextI18n tag</description>
+		<attribute>
+			<name>bean</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>scope</name>
+			<required>false</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>sessionProperty</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.SessionPropertyTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>SessionProperty tag</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>sessionI18nProperty</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.SessionI18nPropertyTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>SessionProperty tag</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>topMenu</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.TopMenuTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>Top Menu tag</description>
+	</tag>
+	<tag>
+		<name>leftMenu</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.LeftMenuTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>Left Menu tag</description>
+	</tag>
+	<tag>
+		<name>exchangeAmount</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.ExchangeAmountTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>exchangeAmount tag</description>
+		<attribute>
+			<name>amount</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>currencyId</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>fileWidth</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.FileWidthTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>fileWidth tag</description>
+		<attribute>
+			<name>width</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>height</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>fileHeight</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.FileHeightTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>fileHeight tag</description>
+		<attribute>
+			<name>width</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>height</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>historyToolbar</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.HistoryToolBarTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>historyToolbar tag</description>
+	</tag>
+	<tag>
+		<name>sessionId</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.SessionIdTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>sessionId tag</description>
+	</tag>
+	<tag>
+		<name>request</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.RequestSupport
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>RequestSupport tag</description>
+		<attribute>
+			<name>key</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>employeeDict</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.EmployeeDictTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>RequestSupport tag</description>
+		<attribute>
+			<name>empId</name>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>dictId</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>errorMsg</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.ErrorMsgTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>ErrorMsgTag tag</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
+		<name>reqAgent</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.ReqAgentTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>ReqAgentTag tag</description>
+	</tag>
+	<tag>
+		<name>sessionAttribute</name>
+		<tag-class>
+			cn.net.unison.web.jsp.taglib.SessionAttributeTag
+		</tag-class>
+		<body-content>JSP</body-content>
+		<description>SessionAttributeTag tag</description>
+		<attribute>
+			<name>value</name>
+			<required>true</required>
+		</attribute>
+	</tag>
+	-->
+</taglib>

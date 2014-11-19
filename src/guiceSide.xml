@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<guiceSide-configuration>
+    <persistence>
+        <provider>hibernate</provider>
+        <hibernate>
+            <packages>
+                <value>la.mingdao.common.entity</value>
+            </packages>
+        </hibernate>
+    </persistence>
+
+    <action>
+        <extension></extension>
+        <global-results>
+            <result name="saveSuccess" type="forward">/view/common/commonAlert.jsp</result>
+            <result name="accessDenied" type="redirect">/wf/req!ingList.dhtml</result>
+            <result name="userSessionException" type="redirect">/view/common/urlGoLogin.html</result>
+            <result name="actionExcetion" type="freemark">/view/common/error.ftl</result>
+            <result name="exception" type="freemark">/view/common/error.ftl</result>
+        </global-results>
+        <global-exception-mappings>
+            <!--<exception-mapping exception="org.guiceside.web.exception.SessionException"-->
+            <!--result="sessionException"/>-->
+            <!--<exception-mapping exception="org.guiceside.web.action.ActionExcetion"-->
+            <!--result="actionExcetion"/>-->
+            <!--<exception-mapping exception="java.lang.Exception"-->
+            <!--result="exception"/>-->
+        </global-exception-mappings>
+        <url>
+            <ignore-params>
+                <pattern>historyId</pattern>
+            </ignore-params>
+            <ignore-params-key>
+                <pattern>id</pattern>
+            </ignore-params-key>
+        </url>
+        <view>
+            <templete>true</templete>
+            <templete-mode>freemarker</templete-mode>
+            <!-- jsp -->
+            <freemarker>
+                <!-- BEANS or SIMPLE-->
+                <freemarker-wrapper>DEFAULT</freemarker-wrapper>
+                <!-- class:// or file://-->
+                <freemarker-loadPath>/</freemarker-loadPath>
+                <!-- 0 is for development only! Use higher value otherwise. -->
+                <freemarker-update-delay>0</freemarker-update-delay>
+                <freemarker-encoding>UTF-8</freemarker-encoding>
+                <freemarker-locale>zh_CN</freemarker-locale>
+                <freemarker-nocache>true</freemarker-nocache>
+                <freemarker-contentType>text/html</freemarker-contentType>
+                <!--IGNORE_HANDLER ,HTML_DEBUG_HANDLER-->
+                <freemarker-exceptionHandler>IGNORE_HANDLER</freemarker-exceptionHandler>
+
+            </freemarker>
+            <velocity>
+                <velocity-configfile>velocity.properties</velocity-configfile>
+                <velocity-encoding>UTF-8</velocity-encoding>
+                <velocity-contentType>text/html</velocity-contentType>
+                <velocity-loaderPath>/</velocity-loaderPath>
+            </velocity>
+
+        </view>
+        <packages>
+            <value>la.mingdao.common.action</value>
+        </packages>
+        <interceptor>
+            <module>
+                <value>org.guiceside.web.interceptor.TimeDifferenceInterceptorModule</value>
+                <value>org.guiceside.web.interceptor.CleanUpInterceptorModule</value>
+                <value>org.guiceside.web.interceptor.ExceptionInterceptorModule</value>
+                <value>la.mingdao.common.ActionInterceptorModel</value>
+                <value>org.guiceside.web.interceptor.TokenValidatorInterceptorModule</value>
+                <value>org.guiceside.web.interceptor.ParamsInterceptorModule</value>
+
+                <value>org.guiceside.web.interceptor.ResultInterceptorModule</value>
+                <value>org.guiceside.web.interceptor.ReqSetAttrInterceptorModule</value>
+            </module>
+        </interceptor>
+    </action>
+</guiceSide-configuration>

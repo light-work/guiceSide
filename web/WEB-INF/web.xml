@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <display-name>
+        GuiceSide
+    </display-name>
+    <filter>
+        <filter-name>guice</filter-name>
+        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>guice</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>guiceSideFilter</filter-name>
+        <filter-class>org.guiceside.web.dispatcher.GuiceSideFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>guiceSideFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>guiceSideSessionInView</filter-name>
+        <filter-class>org.guiceside.web.dispatcher.SessionInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>guiceSideSessionInView</filter-name>
+        <url-pattern>/conference/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>guiceSideSessionInView</filter-name>
+        <url-pattern>/conference1/*</url-pattern>
+    </filter-mapping>
+
+
+    <filter>
+        <filter-name>guiceSideDispatcher</filter-name>
+        <filter-class>org.guiceside.web.dispatcher.FilterDispatcher</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>guiceSideDispatcher</filter-name>
+        <url-pattern>/conference/*</url-pattern>
+    </filter-mapping>
+
+
+    <servlet>
+        <servlet-name>JspSupportServlet</servlet-name>
+        <servlet-class>org.guiceside.web.view.JspSupportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>/joddform</taglib-uri>
+            <taglib-location>/WEB-INF/tld/form_tag.tld</taglib-location>
+        </taglib>
+        <taglib>
+            <taglib-uri>/guiceSide</taglib-uri>
+            <taglib-location>/WEB-INF/tld/guiceSide.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+
+    <listener>
+        <listener-class>org.guiceside.web.listener.DefaultGuiceSideListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>org.guiceside.web.listener.Log4jConfigListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>la.mingdao.web.startup.PlatformLoaderListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>la.mingdao.web.startup.PlatformSessionListener</listener-class>
+    </listener>
+
+    <welcome-file-list>
+        <welcome-file>index.htm</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>default.html</welcome-file>
+        <welcome-file>default.htm</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

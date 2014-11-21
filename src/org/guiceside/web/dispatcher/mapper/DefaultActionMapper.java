@@ -72,7 +72,7 @@ public class DefaultActionMapper implements ActionMapper {
             if (actionMapping.getActionObject() != null) {
                 try {
                     getActionMethod(actionMapping);
-                } catch (NoSuchMethodException e) {
+                } catch (ActionResourceException e) {
                     log.error("NoSuchMethodException", new ActionResourceException("{"
                             + actionMapping.getActionClass()
                             + " }  Method#" + actionMapping.getMethodName()
@@ -106,7 +106,7 @@ public class DefaultActionMapper implements ActionMapper {
      * @throws NoSuchMethodException
      */
     protected void getActionMethod(ActionMapping actionMapping)
-            throws NoSuchMethodException {
+            throws ActionResourceException {
         Method method = null;
 
         for (Class<?> superClass = actionMapping.getActionClass(); ((superClass != Object.class && superClass != null) && (method == null)); superClass = superClass
@@ -119,7 +119,7 @@ public class DefaultActionMapper implements ActionMapper {
             }
         }
         if (method == null) {
-            throw new NoSuchMethodException();
+            throw new ActionResourceException();
         }
         actionMapping.setMethod(method);
     }

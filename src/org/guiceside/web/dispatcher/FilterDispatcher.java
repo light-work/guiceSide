@@ -4,13 +4,19 @@ import com.google.inject.Injector;
 import com.google.inject.OutOfScopeException;
 import org.apache.log4j.Logger;
 import org.guiceside.GuiceSideConstants;
+import org.guiceside.commons.GlobalExceptionMapping;
+import org.guiceside.commons.GlobalResult;
 import org.guiceside.commons.collection.RequestData;
 import org.guiceside.config.Configuration;
+import org.guiceside.web.action.ActionContext;
 import org.guiceside.web.action.ActionExcetion;
+import org.guiceside.web.action.DefaultActionContext;
+import org.guiceside.web.annotation.Dispatcher;
 import org.guiceside.web.dispatcher.mapper.ActionMapper;
 import org.guiceside.web.dispatcher.mapper.ActionMapperFactory;
 import org.guiceside.web.dispatcher.mapper.ActionMapping;
 import org.guiceside.web.listener.DefaultGuiceSideListener;
+import org.guiceside.web.view.freemarker.FreeMarkerResult;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -97,33 +105,115 @@ public class FilterDispatcher implements Filter {
                 actionMapper.createAction(actionMapping, injector);
                 du.execute(httpServletRequest, httpServletResponse,
                         servletContext, actionMapping, getRequestData(), injector);
-                return;
             } catch (Exception e) {
-                boolean exceptionLog = true;
-                if (e instanceof SocketException) {
-                    exceptionLog = false;
-                }
-                if (e instanceof IllegalStateException) {
-                    exceptionLog = false;
-                }
+                DefaultActionContext actionContext = new DefaultActionContext(
+                        createdContext(httpServletRequest, httpServletResponse,
+                                servletContext, actionMapping, getRequestData()));
+                List<GlobalExceptionMapping> globalExceptionMappings = configuration
+                        .getGlobalExceptionMappings();
+                if (globalExceptionMappings != null&&!globalExceptionMappings.isEmpty()) {
+                    for (GlobalExceptionMapping exceptionMapping : globalExceptionMappings) {
+                        Class superClass = e.getCause() == null ? e.getClass() : e.getCause().getClass();
+                        Class currentClass;
+                        while (true) {
+                            currentClass = superClass;
+                            if (currentClass == exceptionMapping.getException()) {
+                                List<GlobalResult> globalResults = configuration
+                                        .getGlobalResults();
+                                if (globalResults != null) {
+                                    boolean isExecute = false;
+                                    for (GlobalResult globalResult : globalResults) {
+                                        if (globalResult.getName().equals(
+                                                exceptionMapping.getResult())) {
+                                            httpServletRequest.setAttribute("errorStack", e.getCause() == null ? e.getStackTrace() : e.getCause().getStackTrace());
+                                            httpServletRequest.setAttribute("errorType", e.getCause() == null ? e.toString() : e.getCause().toString());
+                                            String path = globalResult.getPath();
+                                            Dispatcher dispatcher = globalResult
+                                                    .getType();
+                                            try {
+                                                isExecute = exceptionKill(actionContext, httpServletRequest,
+                                                        httpServletResponse, path,
+                                                        dispatcher);
+                                            }catch (Exception ge){
+                                                isExecute=false;
+                                            }finally {
+                                                if (isExecute) {
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+                            superClass = currentClass.getSuperclass();
+                            if (superClass == null || superClass == Object.class) {
+                                break;
+                            }
+                        }
+                    }
+                }else{
+                    boolean exceptionLog = true;
+                    if (e instanceof SocketException) {
+                        exceptionLog = false;
+                    }
+                    if (e instanceof IllegalStateException) {
+                        exceptionLog = false;
+                    }
 
-                if (exceptionLog) {
-                    log.error("execute failed", new ActionExcetion("[execute failed] In Action {"
-                            + actionMapping.getActionClass().getName()
-                            + "} Method#" + actionMapping.getMethod()
-                            + "# On an Error", e));
-                    throw new ActionExcetion("[execute failed] In Action {"
-                            + actionMapping.getActionClass().getName()
-                            + "} Method#" + actionMapping.getMethod()
-                            + "# On an Error", e);
+                    if (exceptionLog) {
+                        log.error("execute failed", new ActionExcetion("[execute failed] In Action {"
+                                + actionMapping.getActionClass().getName()
+                                + "} Method#" + actionMapping.getMethod()
+                                + "# On an Error", e));
+                        throw new ActionExcetion("[execute failed] In Action {"
+                                + actionMapping.getActionClass().getName()
+                                + "} Method#" + actionMapping.getMethod()
+                                + "# On an Error", e);
+                    }
                 }
-
             } finally {
                 localContext.set(previous);
             }
         }
         chain.doFilter(request, response);
 
+    }
+
+    public Map<String, Object> createdContext(
+            HttpServletRequest httpServletRequest,
+            HttpServletResponse httpServletResponse,
+            ServletContext servletContext, ActionMapping actionMapping, RequestData requestData) {
+        Map<String, Object> actionContext = new HashMap<String, Object>();
+        actionContext.put(ActionContext.HTTPSERVLETREQUEST, httpServletRequest);
+        actionContext.put(ActionContext.HTTPSERVLETRESPONSE,
+                httpServletResponse);
+        actionContext.put(ActionContext.SERVLETCONTEXT, servletContext);
+        actionContext.put(ActionContext.ACTIONMAPPING, actionMapping);
+        actionContext.put(ActionContext.REQUESTDATA, requestData);
+        return actionContext;
+    }
+
+    private boolean exceptionKill(ActionContext actionContext, HttpServletRequest httpServletRequest,
+                            HttpServletResponse httpServletResponse, String path,
+                            Dispatcher dispatcher) throws Exception {
+        if (dispatcher == null) {
+            dispatcher = Dispatcher.Redirect;
+        }
+        switch (dispatcher) {
+            case Redirect:
+                httpServletResponse.sendRedirect(path);
+                return true;
+            case Forward:
+                httpServletRequest.getRequestDispatcher(path).forward(
+                        httpServletRequest, httpServletResponse);
+                return true;
+            case FreeMarker:
+                FreeMarkerResult freeMarkerResult = new FreeMarkerResult();
+                freeMarkerResult.doExecute(path, actionContext);
+                return true;
+        }
+        return false;
     }
 
     /**

@@ -105,6 +105,7 @@ public class FilterDispatcher implements Filter {
                 actionMapper.createAction(actionMapping, injector);
                 du.execute(httpServletRequest, httpServletResponse,
                         servletContext, actionMapping, getRequestData(), injector);
+                return;
             } catch (Exception e) {
                 DefaultActionContext actionContext = new DefaultActionContext(
                         createdContext(httpServletRequest, httpServletResponse,

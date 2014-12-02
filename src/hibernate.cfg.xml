@@ -22,7 +22,8 @@
         <!--登录密码-->
         <property name="password">bjmd2014</property>
 
-        <property name="hibernate.connection.provider_class">org.guiceside.persistence.DruidConnectionProvider
+        <property name="hibernate.connection.provider_class">
+            org.guiceside.persistence.hibernate.support.DruidConnectionProvider
         </property>
         <property name="initialSize">1</property>
         <property name="minIdle">1</property>
@@ -37,32 +38,7 @@
         <property name="poolPreparedStatements">false</property>
         <property name="defaultAutoCommit">true</property>
         <property name="filters">stat</property>
-        <!--<property name="filters">stat</property>-->
-
-
-
-        <!-- C3P0连接池设定-->
-        <!--<property name="connection.driver_class">com.mysql.jdbc.Driver</property>-->
-        <!--&lt;!&ndash; 连接数据库的URL jdbc:mysql://10.168.8.162:3306/meta &ndash;&gt;-->
-        <!--<property name="connection.url">-->
-            <!--jdbc:mysql://127.0.0.1:3306/fundmd-->
-        <!--</property>-->
-        <!--<property name="connection.useUnicode">true</property>-->
-        <!--<property name="connection.characterEncoding">UTF-8</property>-->
-
-        <!--&lt;!&ndash;连接的登录名&ndash;&gt;-->
-        <!--<property name="connection.username">root</property>-->
-
-        <!--&lt;!&ndash;登录密码&ndash;&gt;-->
-        <!--<property name="connection.password">bjmd2014</property>-->
-        <!--<property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider-->
-        <!--</property>-->
-        <!--<property name="hibernate.c3p0.max_size">20</property>-->
-        <!--<property name="hibernate.c3p0.min_size">5</property>-->
-        <!--<property name="hibernate.c3p0.timeout">120</property>-->
-        <!--<property name="hibernate.c3p0.max_statements">100</property>-->
-        <!--<property name="hibernate.c3p0.idle_test_period">120</property>-->
-        <!--<property name="hibernate.c3p0.acquire_increment">2</property>-->
+        <property name="defaultTransactionIsolation">READ_COMMITTED</property>
 
         <property name="hibernate.current_session_context_class">
             managed

@@ -1,8 +1,10 @@
-package org.guiceside.persistence;
+package org.guiceside.persistence.hibernate.support;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
+
+import org.hibernate.cfg.Environment;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
@@ -51,6 +53,7 @@ public class DruidConnectionProvider implements ConnectionProvider, Configurable
     @SuppressWarnings("rawtypes")
     @Override
     public void configure(Map configurationValues) {
+        //隔离级别的设定
         try {
             DruidDataSourceFactory.config(dataSource, configurationValues);
         } catch (SQLException e) {

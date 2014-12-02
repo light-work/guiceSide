@@ -4,7 +4,7 @@
         <provider>hibernate</provider>
         <hibernate>
             <packages>
-                <value>la.mingdao.common.entity</value>
+                <value>fund.mingdao.sys.entity</value>
             </packages>
         </hibernate>
     </persistence>
@@ -68,8 +68,8 @@
             <module>
                 <value>org.guiceside.web.interceptor.TimeDifferenceInterceptorModule</value>
                 <value>org.guiceside.web.interceptor.CleanUpInterceptorModule</value>
-                <value>org.guiceside.web.interceptor.ExceptionInterceptorModule</value>
-                <value>la.mingdao.common.ActionInterceptorModel</value>
+                <!--<value>org.guiceside.web.interceptor.ExceptionInterceptorModule</value>-->
+                <value>fund.mingdao.common.ActionInterceptorModel</value>
                 <value>org.guiceside.web.interceptor.TokenValidatorInterceptorModule</value>
                 <value>org.guiceside.web.interceptor.ParamsInterceptorModule</value>
 

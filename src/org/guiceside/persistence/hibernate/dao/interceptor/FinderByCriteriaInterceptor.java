@@ -21,7 +21,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.*;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projection;
-import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.internal.CriteriaImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

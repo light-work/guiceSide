@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.guiceside.commons.lang.ClassUtils;
-import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
 
 import javax.persistence.Entity;
@@ -31,8 +30,7 @@ public abstract class AbstractHibernatePackageStrategy extends AbstractModule im
 	
 	public Configuration getConfiguration() {
 		addHibernateClasses();
-		AnnotationConfiguration configuration=new AnnotationConfiguration();
-		configuration=configuration.configure();
+		Configuration configuration=new Configuration().configure();
 		if(classes!=null&&!classes.isEmpty()){
 			for (Class<?> cls : classes) {
 				if (cls.isAnnotationPresent(Entity.class)) {

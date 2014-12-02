@@ -2,8 +2,8 @@ package org.guiceside.persistence.hibernate;
 
 import org.guiceside.persistence.WorkManager;
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
-import org.hibernate.context.ManagedSessionContext;
+import org.hibernate.Session;
+import org.hibernate.context.internal.ManagedSessionContext;
 
 /**
  * <p>

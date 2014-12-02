@@ -11,7 +11,7 @@ import org.guiceside.persistence.entity.IdEntity;
 import org.guiceside.persistence.entity.Permanent;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
-import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.internal.CriteriaImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;

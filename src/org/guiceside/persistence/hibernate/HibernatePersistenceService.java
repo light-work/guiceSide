@@ -2,7 +2,11 @@ package org.guiceside.persistence.hibernate;
 
 import com.google.inject.Inject;
 import org.guiceside.persistence.PersistenceService;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
  * <p>
@@ -28,8 +32,10 @@ public class HibernatePersistenceService extends PersistenceService {
 
 	@Override
 	public void start() {
-		sessionFactoryHolder.setSessionFactory(configuration
-				.buildSessionFactory());
+		ServiceRegistryBuilder builder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
+		ServiceRegistry serviceRegistry = builder.buildServiceRegistry();
+		SessionFactory sessionFactory=configuration.buildSessionFactory(serviceRegistry);
+		sessionFactoryHolder.setSessionFactory(sessionFactory);
 
 
 	}

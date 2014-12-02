@@ -56,6 +56,18 @@
         <servlet-class>org.guiceside.web.view.JspSupportServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+        <init-param>
+            <param-name>resetEnable</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidStatView</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
 
 
     <jsp-config>
@@ -76,10 +88,10 @@
         <listener-class>org.guiceside.web.listener.Log4jConfigListener</listener-class>
     </listener>
     <listener>
-        <listener-class>la.mingdao.web.startup.PlatformLoaderListener</listener-class>
+        <listener-class>fund.mingdao.web.startup.PlatformLoaderListener</listener-class>
     </listener>
     <listener>
-        <listener-class>la.mingdao.web.startup.PlatformSessionListener</listener-class>
+        <listener-class>fund.mingdao.web.startup.PlatformSessionListener</listener-class>
     </listener>
 
     <welcome-file-list>

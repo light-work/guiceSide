@@ -6,7 +6,6 @@ import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.enums.ReturnType;
 import org.hibernate.Hibernate;
 import org.hibernate.LockMode;
-import org.hibernate.lob.SerializableClob;
 
 import java.io.Serializable;
 import java.sql.Clob;
@@ -62,118 +61,7 @@ public class HQueryLoad extends HQueryCore {
         clean();
     }
 
-    /**
-     * 针对oracle10g一下不包含10g的客户端 在更新包含clob对象的表时候建立的调用方法
-     * @param clobPropertys
-     * @param clobValues
-     */
-    public void updateWithClob(String[] clobPropertys, String[] clobValues){
-        invoke(Persistent.SAVEORUPDATE);
-        Object cuurentObj = getCurrentObject();
-        Serializable id=null;
-        try {
-            id= (Serializable) BeanUtils.getValue(cuurentObj,"id");
-        } catch (OgnlException e) {
-            return;
-        }
-        Object updateObj=getSession().load(cuurentObj.getClass(),id,LockMode.UPGRADE);
-        //第1步 循环设置为空值
-		for(String expression:clobPropertys){
-			try {
-				oracle.sql.CLOB empty_clob=oracle.sql.CLOB.empty_lob();
-				BeanUtils.setValue(updateObj, expression, empty_clob);
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				return;
-			}
-		}
-        //强制flush 将SQL 强制执行 insert
-		getSession().flush();
-		//强制执行 SQL forUpdate
-		getSession().refresh(updateObj, LockMode.UPGRADE);
 
-		int index=0;
-		//第2步 将记录锁定 然后循环取出CLOB值进行更新
-		for(String expression:clobPropertys){
-            if(clobValues[index]==null){
-                index++;
-                continue;
-            }
-            String value=clobValues[index].toString();
-            SerializableClob sc= null;
-            try {
-                sc = (SerializableClob) BeanUtils.getValue(updateObj, expression);
-            } catch (OgnlException e) {
-                return;
-            }
-            Clob cc=sc.getWrappedClob();
-			oracle.sql.CLOB clob = (oracle.sql.CLOB) cc;
-	        java.io.Writer pw;
-	        try {
-				pw = clob.getCharacterOutputStream();
-				pw.write(value); 
-		        pw.flush();
-		        pw.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			index++;
-		}
-        getSession().saveOrUpdate(updateObj);
-        clean();
-    }
-
-    /**
-     * oracle10g一下不包含10g的客户端 在保存包含clob对象的表时候建立的调用方法
-     * @param clobPropertys
-     * @param clobValues
-     */
-    public void saveWithClob(String[] clobPropertys, String[] clobValues) {
-        Object obj = getCurrentObject();
-        //第1步 将entity里clob字段初始化
-        Clob newClob = Hibernate.createClob(" ");
-        for (String expression : clobPropertys) {
-            try {
-                BeanUtils.setValue(obj, expression, newClob);
-            } catch (OgnlException e) {
-                return;
-            }
-        }
-        invoke(Persistent.SAVEORUPDATE);
-        //强制flush 将SQL 强制执行 insert
-        getSession().flush();
-        //强制执行 SQL forUpdate
-        getSession().refresh(obj, LockMode.UPGRADE);
-        int index = 0;
-        //第2步 将记录锁定 然后循环取出CLOB值进行更新
-        for (String expression : clobPropertys) {
-            if(clobValues[index]==null){
-                index++;
-                continue;
-            }
-            String value=clobValues[index].toString();
-            SerializableClob sc = null;
-            try {
-                sc = (SerializableClob) BeanUtils.getValue(obj, expression);
-            } catch (OgnlException e) {
-                return;
-            }
-            Clob cc = sc.getWrappedClob();
-            oracle.sql.CLOB clob = (oracle.sql.CLOB) cc;
-            java.io.Writer pw;
-            try {
-                pw = clob.getCharacterOutputStream();
-                pw.write(value);
-                pw.flush();
-                pw.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            index++;
-        }
-        getSession().saveOrUpdate(obj);
-        clean();
-    }
 
     /**
      * 持久化对象

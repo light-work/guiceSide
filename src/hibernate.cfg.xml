@@ -4,55 +4,65 @@
 
         PUBLIC "-//Hibernate/Hibernate Configuration DTD//EN"
 
-        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
     <session-factory>
-
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="driver_class">com.mysql.jdbc.Driver</property>
         <!-- 连接数据库的URL jdbc:mysql://10.168.8.162:3306/meta -->
-        <property name="connection.url">
-            jdbc:mysql://127.0.0.1:3306/approve
+        <property name="url">
+            jdbc:mysql://127.0.0.1:3306/fundmd
         </property>
-        <property name="connection.useUnicode">true</property>
-        <property name="connection.characterEncoding">UTF-8</property>
+        <property name="useUnicode">true</property>
+        <property name="characterEncoding">UTF-8</property>
 
         <!--连接的登录名-->
-        <property name="connection.username">root</property>
+        <property name="username">root</property>
 
         <!--登录密码-->
-        <property name="connection.password">sjmd</property>
+        <property name="password">bjmd2014</property>
+
+        <property name="hibernate.connection.provider_class">org.guiceside.persistence.DruidConnectionProvider
+        </property>
+        <property name="initialSize">1</property>
+        <property name="minIdle">1</property>
+        <property name="maxActive">20</property>
+        <property name="maxWait">60000</property>
+        <property name="timeBetweenEvictionRunsMillis">60000</property>
+        <property name="minEvictableIdleTimeMillis">60000</property>
+        <property name="validationQuery">SELECT 1</property>
+        <property name="testWhileIdle">true</property>
+        <property name="testOnBorrow">false</property>
+        <property name="testOnReturn">false</property>
+        <property name="poolPreparedStatements">false</property>
+        <property name="defaultAutoCommit">true</property>
+        <property name="filters">stat</property>
+        <!--<property name="filters">stat</property>-->
+
 
 
         <!-- C3P0连接池设定-->
-        <property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider
-        </property>
-        <property name="hibernate.c3p0.max_size">20</property>
-        <property name="hibernate.c3p0.min_size">5</property>
-        <property name="hibernate.c3p0.timeout">120</property>
-        <property name="hibernate.c3p0.max_statements">100</property>
-        <property name="hibernate.c3p0.idle_test_period">120</property>
-        <property name="hibernate.c3p0.acquire_increment">2</property>
-        <!--
-              <property
-              name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+        <!--<property name="connection.driver_class">com.mysql.jdbc.Driver</property>-->
+        <!--&lt;!&ndash; 连接数据库的URL jdbc:mysql://10.168.8.162:3306/meta &ndash;&gt;-->
+        <!--<property name="connection.url">-->
+            <!--jdbc:mysql://127.0.0.1:3306/fundmd-->
+        <!--</property>-->
+        <!--<property name="connection.useUnicode">true</property>-->
+        <!--<property name="connection.characterEncoding">UTF-8</property>-->
 
+        <!--&lt;!&ndash;连接的登录名&ndash;&gt;-->
+        <!--<property name="connection.username">root</property>-->
 
-
-
-
-              <property name="connection.url">
-              jdbc:oracle:thin:@192.168.1.95:1521:HOME </property> <property
-              name="connection.useUnicode">true</property> <property
-              name="connection.characterEncoding">UTF-8</property>
-              java:comp/env/jdbc/INTRANET
-          -->
-
-        <!--<property name="connection.datasource">java:comp/env/jdbc/OA</property>-->
-
-        <!-- Hibernate的连接加载类 -->
-
-        <!--<property name="connection.provider_class">org.hibernate.connection.DatasourceConnectionProvider</property>-->
+        <!--&lt;!&ndash;登录密码&ndash;&gt;-->
+        <!--<property name="connection.password">bjmd2014</property>-->
+        <!--<property name="hibernate.connection.provider_class">org.hibernate.c3p0.internal.C3P0ConnectionProvider-->
+        <!--</property>-->
+        <!--<property name="hibernate.c3p0.max_size">20</property>-->
+        <!--<property name="hibernate.c3p0.min_size">5</property>-->
+        <!--<property name="hibernate.c3p0.timeout">120</property>-->
+        <!--<property name="hibernate.c3p0.max_statements">100</property>-->
+        <!--<property name="hibernate.c3p0.idle_test_period">120</property>-->
+        <!--<property name="hibernate.c3p0.acquire_increment">2</property>-->
 
         <property name="hibernate.current_session_context_class">
             managed
@@ -74,7 +84,8 @@
 
         <!--指定连接的语言-->
 
-        <property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+        <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
     </session-factory>
 
 </hibernate-configuration>

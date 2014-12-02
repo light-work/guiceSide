@@ -307,7 +307,16 @@ public class HQueryCore extends HQuerySupport {
         evaluation(entityClass,-1,-1);
         Object value = getCurrentObject();
         clean();
-        return (T) value;
+        if(type.toString().equals(Integer.class.toString())){
+            if(value.getClass().toString().equals(Long.class.toString())){
+                value=((Number)value).intValue();
+                return (T) value;
+            }else{
+                return (T) value;
+            }
+        }else{
+            return (T) value;
+        }
     }
 
 

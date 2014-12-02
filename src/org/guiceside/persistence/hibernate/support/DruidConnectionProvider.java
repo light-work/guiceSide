@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.hibernate.cfg.Environment;
+import org.apache.log4j.Logger;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
@@ -15,6 +15,8 @@ import org.hibernate.service.spi.Stoppable;
  * Created by zhenjiaWang on 14/12/2.
  */
 public class DruidConnectionProvider implements ConnectionProvider, Configurable, Stoppable {
+
+    private static final Logger log = Logger.getLogger(DruidConnectionProvider.class);
 
     private static final long serialVersionUID = 1026193803901107651L;
 
@@ -56,9 +58,12 @@ public class DruidConnectionProvider implements ConnectionProvider, Configurable
         //隔离级别的设定
         try {
             DruidDataSourceFactory.config(dataSource, configurationValues);
+            log.debug("DruidConnectionProvider success");
         } catch (SQLException e) {
+            log.debug("DruidConnectionProvider error");
             throw new IllegalArgumentException("config error", e);
         }
+
     }
 
     @Override

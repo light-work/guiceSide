@@ -30,16 +30,27 @@ public abstract class AbstractHibernatePackageStrategy extends AbstractModule im
 	
 	public Configuration getConfiguration() {
 		addHibernateClasses();
-		Configuration configuration=new Configuration().configure();
-		if(classes!=null&&!classes.isEmpty()){
-			for (Class<?> cls : classes) {
-				if (cls.isAnnotationPresent(Entity.class)) {
-					configuration.addAnnotatedClass(cls);
-					if(log.isDebugEnabled()){
-						log.debug("addAnnotatedClass ["+cls.getSimpleName()+"] successful");
+		log.debug("classes ["+classes.size()+"]");
+		Configuration configuration=null;
+		try{
+			log.debug("classes [start=======]");
+			configuration=new Configuration().configure();
+			log.debug("classes [end=======]");
+			if(classes!=null&&!classes.isEmpty()){
+				log.debug("classes ["+classes.size()+"]");
+				for (Class<?> cls : classes) {
+					log.debug(cls.getClasses()+" is ["+cls.isAnnotationPresent(Entity.class)+"]");
+					if (cls.isAnnotationPresent(Entity.class)) {
+						configuration.addAnnotatedClass(cls);
+						if(log.isDebugEnabled()){
+							log.debug("addAnnotatedClass ["+cls.getSimpleName()+"] successful");
+						}
 					}
 				}
 			}
+		}catch (Exception e){
+			log.debug("classes [error]");
+			e.printStackTrace();
 		}
 		return configuration;
 	}
@@ -51,6 +62,7 @@ public abstract class AbstractHibernatePackageStrategy extends AbstractModule im
 	
 	private void addHibernateClasses() {
 		if (hibernatePackages != null && !hibernatePackages.isEmpty()) {
+			log.debug("hibernatePackages size="+hibernatePackages.size());
 			classes= new HashSet<Class<?>>();
 			for (String packages : hibernatePackages) {
 				if (StringUtils.isNotBlank(packages)) {

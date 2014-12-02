@@ -64,6 +64,7 @@ public class ApplicationModule implements Module {
 		binder.install(new ServletModule());
 		binder.install(new ServletContextModule());
         binder.install(new RequestDataModule());
+		log.debug("HibernatePackeages " + configuration.getHibernatePackeages());
 		builderPackages(binder,configuration.getHibernatePackeages(),new HibernateModule());
 		
 		
@@ -76,54 +77,54 @@ public class ApplicationModule implements Module {
 				}
 			}
 		}
-		
-		
-		binder.install(new FinderByIdInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install FinderByIdInterceptorModule Module Successful");
-		}
+
 		binder.install(new HibernateLocalTxnModule());
 		if (log.isDebugEnabled()) {
 			log.debug("Install HibernateLocalTxnModule Module Successful");
 		}
-		binder.install(new SaveInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install SaveInterceptorModule Module Successful");
-		}
-		binder.install(new UpdateInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install UpdateInterceptorModule Module Successful");
-		}
-		binder.install(new SaveOrUpdateInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install SaveOrUpdateInterceptorModule Module Successful");
-		}
-		binder.install(new DeleteInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install DeleteInterceptorModule Module Successful");
-		}
-		binder.install(new FinderByCriteriaInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install FinderByCriteriaInterceptorModule Module Successful");
-		}
-		binder.install(new FinderByHqlInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install FinderByHqlInterceptorModule Module Successful");
-		}
-		binder.install(new FinderBySqlInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install FinderBySqlInterceptorModule Module Successful");
-		}
+
+//		binder.install(new FinderByIdInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install FinderByIdInterceptorModule Module Successful");
+//		}
+//		binder.install(new SaveInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install SaveInterceptorModule Module Successful");
+//		}
+//		binder.install(new UpdateInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install UpdateInterceptorModule Module Successful");
+//		}
+//		binder.install(new SaveOrUpdateInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install SaveOrUpdateInterceptorModule Module Successful");
+//		}
+//		binder.install(new DeleteInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install DeleteInterceptorModule Module Successful");
+//		}
+//		binder.install(new FinderByCriteriaInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install FinderByCriteriaInterceptorModule Module Successful");
+//		}
+//		binder.install(new FinderByHqlInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install FinderByHqlInterceptorModule Module Successful");
+//		}
+//		binder.install(new FinderBySqlInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install FinderBySqlInterceptorModule Module Successful");
+//		}
 		
-		binder.install(new QueryByHqlInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install QueryByHqlInterceptorModule Module Successful");
-		}
+//		binder.install(new QueryByHqlInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install QueryByHqlInterceptorModule Module Successful");
+//		}
 		
-		binder.install(new QueryBySqlInterceptorModule());
-		if (log.isDebugEnabled()) {
-			log.debug("Install QueryBySqlInterceptorModule Module Successful");
-		}
+//		binder.install(new QueryBySqlInterceptorModule());
+//		if (log.isDebugEnabled()) {
+//			log.debug("Install QueryBySqlInterceptorModule Module Successful");
+//		}
 
         binder.install(new ThreadSafeInterceptorModule());
         if (log.isDebugEnabled()) {
@@ -140,6 +141,7 @@ public class ApplicationModule implements Module {
 	private void builderPackages(Binder binder,Set<String> packagesArr,PackageStrategy packageStrategy){
 		if (packagesArr != null&&!packagesArr.isEmpty()) {
 			for (String packages : packagesArr) {
+				log.debug("packages " + packages);
 				packageStrategy.addActionPackages(packages);
 			}
 			binder.install((Module) packageStrategy);

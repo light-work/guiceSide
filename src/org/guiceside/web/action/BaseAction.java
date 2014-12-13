@@ -2,12 +2,14 @@ package org.guiceside.web.action;
 
 import com.google.inject.Inject;
 import net.sf.json.JSONObject;
+import ognl.OgnlException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.*;
 import org.apache.log4j.Logger;
 import org.guiceside.GuiceSideConstants;
 import org.guiceside.commons.TokenUtils;
 import org.guiceside.commons.collection.RequestData;
+import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.support.converter.DateConverter;
 
@@ -330,5 +332,43 @@ public abstract class BaseAction {
             }
         }
         return ip;
+    }
+
+    protected String get(Object entity, String property) {
+        Object result = null;
+        if (entity != null) {
+            try {
+                result = BeanUtils.getValue(entity, property);
+            } catch (OgnlException e) {
+                result = null;
+            }
+        }
+        return StringUtils.defaultIfEmpty(result);
+    }
+
+    protected String getDate(Object entity, String property, String f) {
+        Object result = null;
+        if (entity != null) {
+            try {
+                result = BeanUtils.getValue(entity, property);
+            } catch (OgnlException e) {
+                result = null;
+            }
+        }
+        return StringUtils.defaultIfEmptyByDate((Date) result, f);
+    }
+
+    protected <T> T get(Object entity, String property, Class<T> type) {
+        Object result = null;
+        if (entity != null) {
+            try {
+                result = BeanUtils.getValue(entity, property);
+            } catch (OgnlException e) {
+                result = null;
+            }
+        }
+        result = StringUtils.defaultIfEmpty(result);
+        result = BeanUtils.convertValue(result, type);
+        return (T) result;
     }
 }

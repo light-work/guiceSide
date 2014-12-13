@@ -12,6 +12,8 @@ import org.guiceside.commons.collection.RequestData;
 import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.support.converter.DateConverter;
+import org.guiceside.web.annotation.ReqGet;
+import org.guiceside.web.annotation.ReqSet;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -38,6 +40,18 @@ public abstract class BaseAction {
     protected final Logger log = Logger.getLogger(getClass());
 
     protected String charset = "UTF-8";
+
+    @ReqGet
+    @ReqSet
+    protected Integer rows;
+
+    @ReqGet
+    @ReqSet
+    protected Integer start;
+
+    @ReqGet
+    @ReqSet
+    protected Integer page;
 
     static {
         registConverter();
@@ -70,6 +84,20 @@ public abstract class BaseAction {
         ConvertUtils.register(new FloatConverter(null), Float.class);
         ConvertUtils.register(new DoubleConverter(null), Double.class);
         ConvertUtils.register(new DateConverter(), Date.class);
+    }
+
+    protected int getStart() {
+        if(page==null){
+            page=0;
+        }
+        if(rows==null){
+            rows=10;
+        }
+        if (page > 0) {
+            page = page - 1;
+            start = page * rows;
+        }
+        return start;
     }
 
 

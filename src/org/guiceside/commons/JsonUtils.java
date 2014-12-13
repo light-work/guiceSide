@@ -4,6 +4,7 @@ package org.guiceside.commons;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
+import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.StringUtils;
 
 import java.util.Map;
@@ -80,7 +81,23 @@ public class JsonUtils {
                             key=aliasField(field);
                         }
                         if(StringUtils.isNotBlank(key)){
-                            jsonObject.put(key, jsonDateProcessor.process(field,obj));
+                            if(jsonDateProcessor==null){
+                                jsonObject.put(key, BeanUtils.getValue(obj,field));
+                            }else{
+                                jsonObject.put(key, jsonDateProcessor.process(field,obj));
+                            }
+                        }
+                    }
+                }else{
+                    jsonObject = new JSONObject();
+                    for (String field : includeField) {
+                        String key=aliasField(field);
+                        if(StringUtils.isNotBlank(key)){
+                            if(jsonDateProcessor==null){
+                                jsonObject.put(key, BeanUtils.getValue(obj,field));
+                            }else{
+                                jsonObject.put(key, jsonDateProcessor.process(field,obj));
+                            }
                         }
                     }
                 }

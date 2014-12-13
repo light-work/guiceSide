@@ -1,12 +1,14 @@
 package org.guiceside.commons;
 
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 import net.sf.json.util.CycleDetectionStrategy;
 import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +44,17 @@ public class JsonUtils {
         }catch (Exception e){
         }
         return jsonObject;
+    }
+
+    public static JSONArray formList(List<JSONObject> objectList) {
+        JSONArray jsonArray=null;
+        if(objectList!=null&&!objectList.isEmpty()){
+            jsonArray=new JSONArray();
+            for(JSONObject jsonObject:objectList){
+                jsonArray.add(jsonObject);
+            }
+        }
+        return jsonArray;
     }
 
 

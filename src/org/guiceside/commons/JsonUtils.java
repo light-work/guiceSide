@@ -26,7 +26,7 @@ public class JsonUtils {
 
     private static String  aliasField(String field){
         if(StringUtils.isNotBlank(field)){
-            if(field.indexOf("\\.")==-1){
+            if(field.indexOf(".")==-1){
                 return field;
             }
             String[] fields=field.split("\\.");

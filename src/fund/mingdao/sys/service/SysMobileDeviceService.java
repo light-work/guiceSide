@@ -1,4 +1,4 @@
-package fund.mingdao.sys.entity.service;
+package fund.mingdao.sys.service;
 
 import com.google.inject.Singleton;
 import fund.mingdao.sys.entity.SysMobileDevice;

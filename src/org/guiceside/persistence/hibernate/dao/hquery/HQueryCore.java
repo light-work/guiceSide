@@ -2,10 +2,14 @@ package org.guiceside.persistence.hibernate.dao.hquery;
 
 import ognl.OgnlException;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.lucene.search.Query;
 import org.guiceside.commons.Page;
 import org.guiceside.commons.PageUtils;
 import org.guiceside.commons.lang.BeanUtils;
+import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.persistence.entity.IdEntity;
+import org.guiceside.persistence.entity.search.SelectorUtils;
+import org.guiceside.persistence.hibernate.FullTextSessionFactory;
 import org.guiceside.persistence.hibernate.dao.enums.Persistent;
 import org.guiceside.persistence.hibernate.dao.enums.ReturnType;
 import org.guiceside.persistence.hibernate.dao.enums.SelectorType;
@@ -14,6 +18,8 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.search.FullTextSession;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.hibernate.transform.ResultTransformer;
 
 import java.util.ArrayList;
@@ -75,6 +81,15 @@ public class HQueryCore extends HQuerySupport {
                     page.getEveryPage());
             page.setResultList(criteria.list());
             result=page;
+        }else if(returnType.equals(ReturnType.LIST_FULL_TEXT_INDEX)){
+            if(getCurrentIndexFields()!=null&&getCurrentIndexFields().length>0&& StringUtils.isNotBlank(getCurrentMatching())){
+                FullTextSessionFactory fullTextSessionFactory =new FullTextSessionFactory(getSession());
+                FullTextSession fullTextSession= fullTextSessionFactory.get();
+                QueryBuilder qb = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(entityClass).get();
+                Query luceneQuery= qb.keyword().onFields(getCurrentIndexFields()).matching(getCurrentMatching()).createQuery();
+                org.hibernate.search.FullTextQuery fullTextQuery=fullTextSession.createFullTextQuery(luceneQuery, entityClass).setCriteriaQuery(criteria);
+                result = fullTextQuery.list();
+            }
         }
         setCurrentObject(result);
     }
@@ -250,6 +265,20 @@ public class HQueryCore extends HQuerySupport {
     }
 
     /**
+     *
+     * @param entityClass
+     * @param <T>
+     * @return
+     */
+    public <T extends IdEntity> List<T> listFullTextIndex(Class<? extends IdEntity> entityClass) {
+        setCurrentReturnType(ReturnType.LIST_FULL_TEXT_INDEX);
+        evaluation(entityClass,-1,-1);
+        Object value = getCurrentObject();
+        clean();
+        return (List<T>) value;
+    }
+
+    /**
      * 
      * @param entityClass
      * @param type
@@ -294,6 +323,7 @@ public class HQueryCore extends HQuerySupport {
         clean();
         return (Page<T>) value;
     }
+
 
     /**
      *

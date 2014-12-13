@@ -181,6 +181,39 @@ public class HQuerySupport {
     }
 
     /**
+     * 返回当前Hquery上下文上下文的IndexFields对象
+     * @return
+     */
+    protected String[] getCurrentIndexFields(){
+        return getHQueryContent().getIndexFields();
+    }
+
+    /**
+     * 设置Hquery上下文的Selector对象
+     * @param indexFields
+     */
+    protected void setCurrentIndexFields (String[] indexFields){
+        getHQueryContent().setIndexFields(indexFields);
+    }
+
+    /**
+     * 返回当前Hquery上下文上下文的IndexFields对象
+     * @return
+     */
+    protected String getCurrentMatching(){
+        return getHQueryContent().getMatching();
+    }
+
+    /**
+     * 设置Hquery上下文的Selector对象
+     * @param matching
+     */
+    protected void setCurrentMatching (String matching){
+        getHQueryContent().setMatching(matching);
+    }
+
+
+    /**
      * 返回当前Hquery上下文的ReturnType对象
      * @return
      */

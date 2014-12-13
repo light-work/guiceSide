@@ -3,12 +3,15 @@ package org.guiceside.persistence.hibernate.dao.interceptor;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.log4j.Logger;
+import org.guiceside.persistence.SearchType;
 import org.guiceside.persistence.TransactionType;
 import org.guiceside.persistence.Transactional;
+import org.guiceside.persistence.hibernate.FullTextSessionFactory;
 import org.guiceside.persistence.hibernate.SessionFactoryHolder;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.search.FullTextSession;
 
 import java.lang.reflect.Method;
 
@@ -28,17 +31,6 @@ public class HibernateLocalTxnInterceptor implements MethodInterceptor {
 	}
 
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable {
-//        try{
-//        SessionFactoryHolder.getCurrentSessionFactory()
-//				.getCurrentSession();
-//        }catch (HibernateException e){
-//            if (!ManagedSessionContext.hasBind(SessionFactoryHolder
-//				.getCurrentSessionFactory())){
-//                    ManagedSessionContext.bind(SessionFactoryHolder.getCurrentSessionFactory()
-//				.openSession());
-//            }
-//        }
-        //Session session = SessionUtilsHolder.getCurrentSessionUtils().get();
 		Session session = SessionFactoryHolder.getCurrentSessionFactory()
 				.getCurrentSession();
 
@@ -52,9 +44,19 @@ public class HibernateLocalTxnInterceptor implements MethodInterceptor {
 		if (TransactionType.READ_ONLY.equals(transactional.type())) {
 			session.setFlushMode(FlushMode.MANUAL);
 		}
+
+		Transaction txn=null;
+		FullTextSessionFactory fullTextSessionFactory =null;
 		try {
-			
-			Transaction txn = session.beginTransaction();
+			if(SearchType.FULL_TEXT_INDEX.equals(transactional.searchType())){
+				fullTextSessionFactory =new FullTextSessionFactory(session);
+				FullTextSession fullTextSession = fullTextSessionFactory.get();
+				if(fullTextSession!=null){
+					txn = fullTextSession.beginTransaction();
+				}
+			}else if(SearchType.GENERAL.equals(transactional.searchType())){
+				txn = session.beginTransaction();
+			}
 			if(log.isDebugEnabled()){
 				log.debug("begin Transaction");
 			}
@@ -62,7 +64,6 @@ public class HibernateLocalTxnInterceptor implements MethodInterceptor {
 			try {
 				result = methodInvocation.proceed();
 			} catch (Exception e) {
-
 				// 发生异常判断@Transactional声明
 				if (rollbackIfNecessary(transactional, e, txn)){
 					txn.commit();
@@ -70,14 +71,18 @@ public class HibernateLocalTxnInterceptor implements MethodInterceptor {
 						log.debug("end Transaction");
 					}
 				}
-					
-
 				// propagate whatever exception is thrown anyway
 				throw e;
+			}finally {
+				if(SearchType.FULL_TEXT_INDEX.equals(transactional.searchType())){
+					if(fullTextSessionFactory!=null){
+						fullTextSessionFactory.releaseSession();
+						fullTextSessionFactory=null;
+					}
+				}
 			}
 			Exception commitException = null;
 			try {
-
 				txn.commit();
 				if(log.isDebugEnabled()){
 					log.debug("end Transaction");
@@ -88,6 +93,13 @@ public class HibernateLocalTxnInterceptor implements MethodInterceptor {
 					log.debug("end Transaction");
 				}
 				commitException = re;
+			}finally {
+				if(SearchType.FULL_TEXT_INDEX.equals(transactional.searchType())){
+					if(fullTextSessionFactory!=null){
+						fullTextSessionFactory.releaseSession();
+						fullTextSessionFactory=null;
+					}
+				}
 			}
 			if (null != commitException)
 				throw commitException;
@@ -95,6 +107,12 @@ public class HibernateLocalTxnInterceptor implements MethodInterceptor {
 		} finally {
 			if (TransactionType.READ_ONLY.equals(transactional.type()))
 				session.setFlushMode(savedFlushMode);
+			if(SearchType.FULL_TEXT_INDEX.equals(transactional.searchType())){
+				if(fullTextSessionFactory!=null){
+					fullTextSessionFactory.releaseSession();
+					fullTextSessionFactory=null;
+				}
+			}
 		}
 
 	}

@@ -7,5 +7,5 @@ package org.guiceside.persistence.hibernate.dao.enums;
  *
  **/
 public enum ReturnType {
-	PLAIN, LIST, ARRAY, PAGE
+	PLAIN, LIST, ARRAY, PAGE,LIST_FULL_TEXT_INDEX
 }

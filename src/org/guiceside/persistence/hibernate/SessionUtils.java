@@ -24,6 +24,7 @@ public class SessionUtils {
 	}
 
 	public Session get() {
+		System.out.println("************* init");
         Session s = localSession.get();
 		if ((s == null) || !s.isOpen()) {
 			synchronized (this) {

@@ -18,6 +18,10 @@ public class HQueryContent implements Serializable {
 
     private List<Selector> selectors;
 
+    private String[] indexFields;
+
+    private String matching;
+
     private Serializable id;
     
     private ReturnType returnType;
@@ -36,9 +40,21 @@ public class HQueryContent implements Serializable {
         this.object = object;
         this.id=id;
         this.selectors = selectors;
+        this.indexFields=null;
+        this.matching=null;
         this.returnType = returnType;
         this.sql=sql;
     }
+    public HQueryContent(Object object, Serializable id,List<Selector> selectors,String matching,String sql, ReturnType returnType,String... indexFields) {
+        this.object = object;
+        this.id=id;
+        this.selectors = selectors;
+        this.indexFields=indexFields;
+        this.matching=matching;
+        this.returnType = returnType;
+        this.sql=sql;
+    }
+
 
     public Serializable getId() {
         return id;
@@ -97,7 +113,6 @@ public class HQueryContent implements Serializable {
     }
 
 
-
     public HQuerySql getHQuerySql() {
         return hQuerySql;
     }
@@ -105,6 +120,24 @@ public class HQueryContent implements Serializable {
     public void setHQuerySql(HQuerySql hQuerySql) {
         this.hQuerySql = hQuerySql;
     }
+
+    public String getMatching() {
+        return matching;
+    }
+
+    public void setMatching(String matching) {
+        this.matching = matching;
+    }
+
+    public String[] getIndexFields() {
+        return indexFields;
+    }
+
+    public void setIndexFields(String[] indexFields) {
+        this.indexFields = indexFields;
+    }
+
+
 
     public String getSql() {
         return sql;
@@ -122,5 +155,8 @@ public class HQueryContent implements Serializable {
         this.hQueryCallBack = null;
         this.hQuerySql=null;
         this.sql=null;
+        this.matching=null;
+        this.indexFields=null;
     }
+
 }

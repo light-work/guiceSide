@@ -62,6 +62,10 @@
 
 
         <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+
+        <property name="hibernate.search.default.directory_provider">filesystem</property>
+
+        <property name="hibernate.search.default.indexBase">/project/lucene/indexes</property>
     </session-factory>
 
 </hibernate-configuration>

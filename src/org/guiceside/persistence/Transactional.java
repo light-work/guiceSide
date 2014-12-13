@@ -27,4 +27,6 @@ public @interface Transactional {
 	Class<? extends Exception>[] rollbackOn() default RuntimeException.class;
 
 	Class<? extends Exception>[] exceptOn() default {};
+
+	SearchType searchType() default SearchType.GENERAL;
 }

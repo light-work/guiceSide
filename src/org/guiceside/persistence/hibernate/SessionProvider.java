@@ -29,6 +29,7 @@ public class SessionProvider implements Provider<Session> {
 	}
 
 	public Session get() {
+		System.out.println("************* 1222");
         Session s = localSession.get();
 		if ((s == null) || !s.isOpen()) {
 			synchronized (this) {

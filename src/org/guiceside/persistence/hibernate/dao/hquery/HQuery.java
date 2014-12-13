@@ -63,6 +63,18 @@ public class HQuery extends HQuerySelector {
         return getCurrentHQueryGet();
     }
 
+    protected HQueryGet $(List<Selector> selectorList,String matching,String... indexFields) {
+        setHQueryContent(new HQueryContent(null, null, new ArrayList<Selector>(), matching,null, ReturnType.LIST,indexFields));
+        setCurrentHQueryGet(new HQueryGet(getHQueryContent()));
+        getCurrentHQueryGet().setCurrentHQueryGet(getCurrentHQueryGet());
+        if (selectorList != null) {
+            for (Selector selector : selectorList) {
+                $core(selector);
+            }
+        }
+        return getCurrentHQueryGet();
+    }
+
     protected HQueryGet $(List<Selector> selectorList) {
         setHQueryContent(new HQueryContent(null, null, new ArrayList<Selector>(), null, ReturnType.LIST));
         setCurrentHQueryGet(new HQueryGet(getHQueryContent()));

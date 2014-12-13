@@ -77,25 +77,25 @@ public class DefaultActionMapper implements ActionMapper {
                             + actionMapping.getActionClass()
                             + " }  Method#" + actionMapping.getMethodName()
                             + "#  not found", e));
-                    throw new ActionResourceException("{"
-                            + actionMapping.getActionClass()
-                            + " }  Method#" + actionMapping.getMethodName()
-                            + "#  not found", e);
+//                    throw new ActionResourceException("{"
+//                            + actionMapping.getActionClass()
+//                            + " }  Method#" + actionMapping.getMethodName()
+//                            + "#  not found", e);
                 }
             } else {
                 log.error("instance failed", new ActionResourceException(
                         "[Injector instance failed] instance Object:"
                                 + actionMapping.getActionClass() + " "));
-                throw new ActionResourceException(
-                        "[Injector instance failed] instance Object:"
-                                + actionMapping.getActionClass() + " ");
+//                throw new ActionResourceException(
+//                        "[Injector instance failed] instance Object:"
+//                                + actionMapping.getActionClass() + " ");
             }
         } else {
             log.error("not found resource", new ActionResourceException(
                     "request url :"
                             + actionMapping.getUri() + " not found resource"));
-            throw new ActionResourceException("request url :"
-                    + actionMapping.getUri() + " not found resource");
+//            throw new ActionResourceException("request url :"
+//                    + actionMapping.getUri() + " not found resource");
         }
     }
 

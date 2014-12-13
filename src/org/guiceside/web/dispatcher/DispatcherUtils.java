@@ -77,8 +77,6 @@ public class DispatcherUtils {
         actionContext.put(ActionContext.HTTPSERVLETREQUEST, httpServletRequest);
         actionContext.put(ActionContext.HTTPSERVLETRESPONSE,
                 httpServletResponse);
-//        actionContext.put(ActionContext.HTTPSESSION, httpServletRequest
-//                .getSession());
         actionContext.put(ActionContext.SERVLETCONTEXT, servletContext);
         actionContext.put(ActionContext.ACTIONMAPPING, actionMapping);
         actionContext.put(ActionContext.REQUESTDATA, requestData);

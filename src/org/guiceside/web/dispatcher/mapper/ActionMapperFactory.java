@@ -4,6 +4,7 @@ import org.guiceside.GuiceSideConstants;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -16,7 +17,7 @@ import java.util.Map;
  *
  */
 public class ActionMapperFactory {
-	 private static final Map<String, ActionMapper> mapperMap=new HashMap<String, ActionMapper>();
+	 private static final Map<String, ActionMapper> mapperMap=new ConcurrentHashMap<String, ActionMapper>();
 	 
 	 /**
 	  * 

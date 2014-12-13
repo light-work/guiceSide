@@ -21,8 +21,6 @@ public interface ActionContext {
 
 	public static final String HTTPSERVLETRESPONSE = "javax.servlet.http.HttpServletResponse";
 
-	public static final String HTTPSESSION = "javax.servlet.http.HttpSession";
-
 	public static final String SERVLETCONTEXT = "javax.servlet.ServletContext";
 
     public static final String REQUESTDATA = "org.guiceside.commons.collection.RequestData";

@@ -68,11 +68,10 @@
             <module>
                 <value>org.guiceside.web.interceptor.TimeDifferenceInterceptorModule</value>
                 <value>org.guiceside.web.interceptor.CleanUpInterceptorModule</value>
-                <!--<value>org.guiceside.web.interceptor.ExceptionInterceptorModule</value>-->
                 <value>fund.mingdao.common.ActionInterceptorModel</value>
                 <value>org.guiceside.web.interceptor.TokenValidatorInterceptorModule</value>
                 <value>org.guiceside.web.interceptor.ParamsInterceptorModule</value>
-
+                <!--<value>org.guiceside.web.interceptor.ExceptionInterceptorModule</value>-->
                 <value>org.guiceside.web.interceptor.ResultInterceptorModule</value>
                 <value>org.guiceside.web.interceptor.ReqSetAttrInterceptorModule</value>
             </module>

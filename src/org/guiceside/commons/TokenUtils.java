@@ -2,6 +2,8 @@ package org.guiceside.commons;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.UUID;
+
 /**
  * <p>
  * 生成Token工具类
@@ -104,6 +106,17 @@ public class TokenUtils {
 		session+=getCHAR(currentTimeMillis, 2, 4);
         Base64Utils.encode(session);
 		return session;
+	}
+
+	/**
+	 *
+	 * UUID
+	 *
+	 * @return UUID(Universally Unique Identifier)全局唯一标识符
+	 */
+	public static String getUUID(){
+		UUID uuid = UUID.randomUUID();
+		return 	uuid.toString();
 	}
 	
 	/**

@@ -107,71 +107,22 @@ public class FilterDispatcher implements Filter {
                         servletContext, actionMapping, getRequestData(), injector);
                 return;
             } catch (Exception e) {
-                DefaultActionContext actionContext = new DefaultActionContext(
-                        createdContext(httpServletRequest, httpServletResponse,
-                                servletContext, actionMapping, getRequestData()));
-                List<GlobalExceptionMapping> globalExceptionMappings = configuration
-                        .getGlobalExceptionMappings();
-                if (globalExceptionMappings != null&&!globalExceptionMappings.isEmpty()) {
-                    for (GlobalExceptionMapping exceptionMapping : globalExceptionMappings) {
-                        Class superClass = e.getCause() == null ? e.getClass() : e.getCause().getClass();
-                        Class currentClass;
-                        while (true) {
-                            currentClass = superClass;
-                            if (currentClass == exceptionMapping.getException()) {
-                                List<GlobalResult> globalResults = configuration
-                                        .getGlobalResults();
-                                if (globalResults != null) {
-                                    boolean isExecute = false;
-                                    for (GlobalResult globalResult : globalResults) {
-                                        if (globalResult.getName().equals(
-                                                exceptionMapping.getResult())) {
-                                            httpServletRequest.setAttribute("errorStack", e.getCause() == null ? e.getStackTrace() : e.getCause().getStackTrace());
-                                            httpServletRequest.setAttribute("errorType", e.getCause() == null ? e.toString() : e.getCause().toString());
-                                            String path = globalResult.getPath();
-                                            Dispatcher dispatcher = globalResult
-                                                    .getType();
-                                            try {
-                                                isExecute = exceptionKill(actionContext, httpServletRequest,
-                                                        httpServletResponse, path,
-                                                        dispatcher);
-                                            }catch (Exception ge){
-                                                isExecute=false;
-                                            }finally {
-                                                if (isExecute) {
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                break;
-                            }
-                            superClass = currentClass.getSuperclass();
-                            if (superClass == null || superClass == Object.class) {
-                                break;
-                            }
-                        }
-                    }
-                }else{
-                    boolean exceptionLog = true;
-                    if (e instanceof SocketException) {
-                        exceptionLog = false;
-                    }
-                    if (e instanceof IllegalStateException) {
-                        exceptionLog = false;
-                    }
-
-                    if (exceptionLog) {
-                        log.error("execute failed", new ActionExcetion("[execute failed] In Action {"
-                                + actionMapping.getActionClass().getName()
-                                + "} Method#" + actionMapping.getMethod()
-                                + "# On an Error", e));
-                        throw new ActionExcetion("[execute failed] In Action {"
-                                + actionMapping.getActionClass().getName()
-                                + "} Method#" + actionMapping.getMethod()
-                                + "# On an Error", e);
-                    }
+                boolean exceptionLog = true;
+                if (e instanceof SocketException) {
+                    exceptionLog = false;
+                }
+                if (e instanceof IllegalStateException) {
+                    exceptionLog = false;
+                }
+                if (exceptionLog) {
+                    log.error("execute failed", new ActionExcetion("[execute failed] In Action {"
+                            + actionMapping.getActionClass().getName()
+                            + "} Method#" + actionMapping.getMethod()
+                            + "# On an Error", e));
+                    throw new ActionExcetion("[execute failed] In Action {"
+                            + actionMapping.getActionClass().getName()
+                            + "} Method#" + actionMapping.getMethod()
+                            + "# On an Error", e);
                 }
             } finally {
                 localContext.set(previous);

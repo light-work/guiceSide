@@ -87,6 +87,9 @@ public abstract class BaseAction {
     }
 
     protected int getStart() {
+        if(start!=null){
+            return start;
+        }
         if(page==null){
             page=1;
         }

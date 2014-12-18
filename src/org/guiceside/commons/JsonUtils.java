@@ -37,6 +37,7 @@ public class JsonUtils {
         }
         return null;
     }
+
     public static JSONObject formObject(Object obj) {
         JSONObject jsonObject=null;
         try{
@@ -79,7 +80,7 @@ public class JsonUtils {
         return formObjectInclude(obj,null,keyMap,includeField);
     }
 
-    public static JSONObject formObjectInclude(Object obj,JsonDateProcessor jsonDateProcessor,Map<String,String> keyMap,
+    public static JSONObject formObjectInclude(Object obj,JsonDataProcessor jsonDataProcessor,Map<String,String> keyMap,
                                                String ...includeField) {
         JSONObject jsonObject=null;
         try{
@@ -94,10 +95,10 @@ public class JsonUtils {
                             key=aliasField(field);
                         }
                         if(StringUtils.isNotBlank(key)){
-                            if(jsonDateProcessor==null){
+                            if(jsonDataProcessor ==null){
                                 jsonObject.put(key, BeanUtils.getValue(obj,field));
                             }else{
-                                jsonObject.put(key, jsonDateProcessor.process(field,obj));
+                                jsonObject.put(key, jsonDataProcessor.process(field,obj));
                             }
                         }
                     }
@@ -106,10 +107,10 @@ public class JsonUtils {
                     for (String field : includeField) {
                         String key=aliasField(field);
                         if(StringUtils.isNotBlank(key)){
-                            if(jsonDateProcessor==null){
+                            if(jsonDataProcessor ==null){
                                 jsonObject.put(key, BeanUtils.getValue(obj,field));
                             }else{
-                                jsonObject.put(key, jsonDateProcessor.process(field,obj));
+                                jsonObject.put(key, jsonDataProcessor.process(field,obj));
                             }
                         }
                     }
@@ -118,5 +119,20 @@ public class JsonUtils {
         }catch (Exception e){
         }
         return jsonObject;
+    }
+
+    public static <T> T toBean(JSONObject obj,Class<T> type,JsonValueProcessor jsonValueProcessor,String ...includeField) {
+        T result = null;
+        try{
+            if(includeField!=null&&includeField.length>0){
+                result=type.newInstance();
+                for (String field : includeField) {
+                    Object valueObj=obj.get(field);
+                    result=jsonValueProcessor.process(field,valueObj,result);
+                }
+            }
+        }catch (Exception e){
+        }
+        return result;
     }
 }

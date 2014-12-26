@@ -46,40 +46,50 @@ public class TimeUtils {
         return hours;
     }
 	public static String getTimeDiff(long tStart, long tEnd) {
+		return getTimeDiff(tStart,tEnd,false);
+	}
+	public static String getTimeDiff(long tStart, long tEnd,boolean china) {
 		long sec = 1000;
 		long min = sec * 60;
 		long hour = min * 60;
 		long day = hour * 24;
 		long month = day * 30;
 		long year = 365 * day;
+		String msStr=china?" 毫秒 ":" [ms] ";
+		String sStr=china?" 秒 ":" [s] ";
+		String minStr=china?" 分 ":" [min] ";
+		String hStr=china?" 小时 ":" [h] ";
+		String dStr=china?" 天 ":" [d] ";
+		String mStr=china?" 月 ":" [m] ";
+		String yStr=china?" 年 ":" [y] ";
 
 		// UTC is temporary realized to hold the time in miliss passed from ..
 		// 1970
 		long diffInMills = tEnd - tStart;
 		if(diffInMills<sec){
-			return String.valueOf(diffInMills) + " [ms]";
+			return String.valueOf(diffInMills) + msStr;
 		}else if (diffInMills < min) {
-			return String.valueOf(diffInMills / sec) + " [s]";
+			return String.valueOf(diffInMills / sec) + sStr;
 		} else if (diffInMills < hour) {
 			long lmin = diffInMills / min;
 			long lsec = (diffInMills - lmin * min) / sec;
-			return String.valueOf(lmin) + " [min] " + String.valueOf(lsec)
-					+ " [s]";
+			return String.valueOf(lmin) + minStr + String.valueOf(lsec)
+					+ sStr;
 		} else if (diffInMills < day) {
 			long lhour = diffInMills / hour;
 			long lmin = (diffInMills - lhour * hour) / min;
 			long lsec = (diffInMills - lhour * hour - lmin * min) / sec;
-			return String.valueOf(lhour) + " [h] " + String.valueOf(lmin)
-					+ " [min] " + String.valueOf(lsec) + " [s]";
+			return String.valueOf(lhour) + hStr + String.valueOf(lmin)
+					+minStr + String.valueOf(lsec) + sStr;
 		} else if (diffInMills < month) {
 			long lday = diffInMills / day;
 			long lhour = (diffInMills - lday * day) / hour;
 			long lmin = (diffInMills - lday * day - lhour * hour) / min;
 			long lsec = (diffInMills - lday * day - lhour * hour - lmin * min)
 					/ sec;
-			return String.valueOf(lday) + " [d] " + String.valueOf(lhour)
-					+ " [h] " + String.valueOf(lmin) + " [min] "
-					+ String.valueOf(lsec) + " [s]";
+			return String.valueOf(lday) + dStr + String.valueOf(lhour)
+					+ hStr + String.valueOf(lmin) + minStr
+					+ String.valueOf(lsec) + sStr;
 		} else if (diffInMills < year) {
 			long mn = diffInMills / month;
 			long lday = (diffInMills - mn * month) / day;
@@ -89,10 +99,10 @@ public class TimeUtils {
 			long lsec = (diffInMills - mn * month - lday * day - lhour * hour - lmin
 					* min)
 					/ sec;
-			return String.valueOf(mn) + " [m] " + String.valueOf(lday)
-					+ " [d] " + String.valueOf(lhour) + " [h] "
-					+ String.valueOf(lmin) + " [min] " + String.valueOf(lsec)
-					+ " [s]";
+			return String.valueOf(mn) + mStr + String.valueOf(lday)
+					+ dStr + String.valueOf(lhour) + hStr
+					+ String.valueOf(lmin) + minStr + String.valueOf(lsec)
+					+ sStr;
 		} else { // if (diffInMills>=year)
 			long lyear = diffInMills / year;
 			long mn = (diffInMills - lyear * year) / month;
@@ -105,10 +115,10 @@ public class TimeUtils {
 			long lsec = (diffInMills - lyear * year - mn * month - lday * day
 					- lhour * hour - lmin * min)
 					/ sec;
-			return String.valueOf(lyear) + " [y] " + String.valueOf(mn)
-					+ " [m] " + String.valueOf(lday) + " [d] "
-					+ String.valueOf(lhour) + " [h] " + String.valueOf(lmin)
-					+ " [min] " + String.valueOf(lsec) + " [s]";
+			return String.valueOf(lyear) + yStr + String.valueOf(mn)
+					+ mStr + String.valueOf(lday) + dStr
+					+ String.valueOf(lhour) + hStr + String.valueOf(lmin)
+					+ minStr + String.valueOf(lsec) + sStr;
 		}
 	}
 }

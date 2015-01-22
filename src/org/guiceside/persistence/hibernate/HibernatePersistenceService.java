@@ -32,10 +32,14 @@ public class HibernatePersistenceService extends PersistenceService {
 
 	@Override
 	public void start() {
-		ServiceRegistryBuilder builder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
-		ServiceRegistry serviceRegistry = builder.buildServiceRegistry();
-		SessionFactory sessionFactory=configuration.buildSessionFactory(serviceRegistry);
-		sessionFactoryHolder.setSessionFactory(sessionFactory);
+		try {
+			ServiceRegistryBuilder builder = new ServiceRegistryBuilder().applySettings(configuration.getProperties());
+			ServiceRegistry serviceRegistry = builder.buildServiceRegistry();
+			SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+			sessionFactoryHolder.setSessionFactory(sessionFactory);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
 
 
 	}

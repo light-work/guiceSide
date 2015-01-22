@@ -60,6 +60,7 @@ public class DruidConnectionProvider implements ConnectionProvider, Configurable
             DruidDataSourceFactory.config(dataSource, configurationValues);
             log.debug("DruidConnectionProvider success");
         } catch (SQLException e) {
+            e.printStackTrace();
             log.debug("DruidConnectionProvider error");
             throw new IllegalArgumentException("config error", e);
         }

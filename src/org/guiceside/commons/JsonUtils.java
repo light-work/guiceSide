@@ -9,6 +9,7 @@ import org.guiceside.commons.lang.BeanUtils;
 import org.guiceside.commons.lang.StringUtils;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,6 +82,20 @@ public class JsonUtils {
         return formObjectInclude(obj, null, keyMap, includeField);
     }
 
+    public static List<JSONObject> formListInclude(List<Object> objList, JsonDataProcessor jsonDataProcessor, Map<String, String> keyMap,
+                                               String... includeField) {
+        List<JSONObject> objectList=null;
+        if(objList!=null&&!objList.isEmpty()){
+            objectList=new ArrayList<JSONObject>();
+            for(Object obj:objList){
+                JSONObject o=formObjectInclude(obj,jsonDataProcessor,keyMap,includeField);
+                if(o!=null){
+                    objectList.add(o);
+                }
+            }
+        }
+        return objectList;
+    }
     public static JSONObject formObjectInclude(Object obj, JsonDataProcessor jsonDataProcessor, Map<String, String> keyMap,
                                                String... includeField) {
         JSONObject jsonObject = null;

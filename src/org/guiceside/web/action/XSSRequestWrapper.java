@@ -1,75 +1,101 @@
 package org.guiceside.web.action;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.guiceside.commons.lang.StringUtils;
+import org.owasp.validator.html.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
  * Created by zhenjiaWang on 15/1/22.
  */
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
-    public XSSRequestWrapper(HttpServletRequest servletRequest) {
-        super(servletRequest);
+    private static Policy policy = null;
+
+    static{
+        //String path = URLUtility.getClassPath(XssRequestWrapper.class)+File.separator+"antisamy-anythinggoes-1.4.4.xml";
+        String path =XSSRequestWrapper.class.getClassLoader().getResource("antisamy-anythinggoes-1.4.4.xml").getFile();
+        System.out.println("policy_filepath:"+path);
+        if(path.startsWith("file")){
+            path = path.substring(6);
+        }
+        try {
+            policy = Policy.getInstance(path);
+        } catch (PolicyException e) {
+            e.printStackTrace();
+        }
     }
-    @Override
-    public String[] getParameterValues(String parameter) {
-        String[] values = super.getParameterValues(parameter);
-        if (values == null) {
+
+    public XSSRequestWrapper(HttpServletRequest request) {
+        super(request);
+    }
+
+    @SuppressWarnings("rawtypes")
+    public Map<String,String[]> getParameterMap(){
+        Map<String,String[]> request_map = super.getParameterMap();
+        Iterator iterator = request_map.entrySet().iterator();
+        System.out.println("request_map"+request_map.size());
+        while(iterator.hasNext()){
+            Map.Entry me = (Map.Entry)iterator.next();
+            //System.out.println(me.getKey()+":");
+            String[] values = (String[])me.getValue();
+            for(int i = 0 ; i < values.length ; i++){
+                System.out.println(values[i]);
+                values[i] = xssClean(values[i]);
+            }
+        }
+        return request_map;
+    }
+    public String[] getParameterValues(String paramString)
+    {
+        String[] arrayOfString1 = super.getParameterValues(paramString);
+        if (arrayOfString1 == null)
             return null;
-        }
-        int count = values.length;
-        String[] encodedValues = new String[count];
-        for (int i = 0; i < count; i++) {
-            encodedValues[i] = stripXSS(values[i]);
-        }
-        return encodedValues;
+        int i = arrayOfString1.length;
+        String[] arrayOfString2 = new String[i];
+        for (int j = 0; j < i; j++)
+            arrayOfString2[j] = xssClean(arrayOfString1[j]);
+        return arrayOfString2;
     }
-    @Override
-    public String getParameter(String parameter) {
-        String value = super.getParameter(parameter);
-        return stripXSS(value);
+
+    public String getParameter(String paramString)
+    {
+        String str = super.getParameter(paramString);
+        if (str == null)
+            return null;
+        return xssClean(str);
     }
-    @Override
-    public String getHeader(String name) {
-        String value = super.getHeader(name);
-        return stripXSS(value);
+
+    public String getHeader(String paramString)
+    {
+        String str = super.getHeader(paramString);
+        if (str == null)
+            return null;
+        return xssClean(str);
     }
-    private String stripXSS(String value) {
-        if (value != null) {
-            // NOTE: It's highly recommended to use the ESAPI library and uncomment the following line to
-            // avoid encoded attacks.
-            // value = ESAPI.encoder().canonicalize(value);
-            // Avoid null characters
-            value = value.replaceAll("", "");
-            // Avoid anything between script tags
-            Pattern scriptPattern = Pattern.compile("(.*?)", Pattern.CASE_INSENSITIVE);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Avoid anything in a src="http://www.yihaomen.com/article/java/..." type of e­xpression
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\'(.*?)\\\'", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            value = scriptPattern.matcher(value).replaceAll("");
-            scriptPattern = Pattern.compile("src[\r\n]*=[\r\n]*\\\"(.*?)\\\"", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Remove any lonesome  tag
-            scriptPattern = Pattern.compile("", Pattern.CASE_INSENSITIVE);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Remove any lonesome  tag
-            scriptPattern = Pattern.compile("", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Avoid eval(...) e­xpressions
-            scriptPattern = Pattern.compile("eval\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Avoid e­xpression(...) e­xpressions
-            scriptPattern = Pattern.compile("e­xpression\\((.*?)\\)", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Avoid javascript:... e­xpressions
-            scriptPattern = Pattern.compile("javascript:", Pattern.CASE_INSENSITIVE);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Avoid vbscript:... e­xpressions
-            scriptPattern = Pattern.compile("vbscript:", Pattern.CASE_INSENSITIVE);
-            value = scriptPattern.matcher(value).replaceAll("");
-            // Avoid onload= e­xpressions
-            scriptPattern = Pattern.compile("onload(.*?)=", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
-            value = scriptPattern.matcher(value).replaceAll("");
+
+
+    private String xssClean(String value) {
+        AntiSamy antiSamy = new AntiSamy();
+        try {
+            //CleanResults cr = antiSamy.scan(dirtyInput, policyFilePath);
+            final CleanResults cr = antiSamy.scan(value, policy);
+            String str= StringEscapeUtils.unescapeHtml(cr.getCleanHTML());
+            if(StringUtils.isNotBlank(str)){
+                str=str.replaceAll((antiSamy.scan("&nbsp;",policy)).getCleanHTML(),"");
+            }else{
+                str=cr.getCleanHTML();
+            }
+            //安全的HTML输出
+            return str;
+        } catch (ScanException e) {
+            e.printStackTrace();
+        } catch (PolicyException e) {
+            e.printStackTrace();
         }
         return value;
     }

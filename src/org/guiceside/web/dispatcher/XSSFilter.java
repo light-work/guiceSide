@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.guiceside.web.dispatcher.mapper;
+package org.guiceside.web.dispatcher;
 
 import org.guiceside.web.action.XSSRequestWrapper;
 

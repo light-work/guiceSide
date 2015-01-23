@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Created by zhenjiaWang on 15/1/22.
@@ -17,8 +16,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     private static Policy policy = null;
 
     static{
-        //String path = URLUtility.getClassPath(XssRequestWrapper.class)+File.separator+"antisamy-anythinggoes-1.4.4.xml";
-        String path =XSSRequestWrapper.class.getClassLoader().getResource("antisamy-anythinggoes-1.4.4.xml").getFile();
+        String path =XSSRequestWrapper.class.getClassLoader().getResource("antisamy-rule-oa.xml").getFile();
         System.out.println("policy_filepath:"+path);
         if(path.startsWith("file")){
             path = path.substring(6);

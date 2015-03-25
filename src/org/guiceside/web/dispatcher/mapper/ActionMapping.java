@@ -24,6 +24,7 @@ public class ActionMapping {
     private RequestData<String, Object> params;
     private String uri;
     private String extension;
+    private String refererUrl;
 
     public String getMethodName() {
         return methodName;
@@ -95,6 +96,14 @@ public class ActionMapping {
 
     public void setMethod(Method method) {
         this.method = method;
+    }
+
+    public String getRefererUrl() {
+        return refererUrl;
+    }
+
+    public void setRefererUrl(String refererUrl) {
+        this.refererUrl = refererUrl;
     }
 
     public boolean isError() {

@@ -45,6 +45,7 @@ public class DefaultActionMapper implements ActionMapper {
         ActionMapping actionMapping = new ActionMapping();
         String uri = getUri(httpServletRequest);
         actionMapping.setUri(uri);
+        actionMapping.setRefererUrl(httpServletRequest.getHeader("REFERER"));
         uri = perseActionExtension(uri, actionMapping, configuration);
         if (actionMapping.getExtension().equals("xml") || actionMapping.getExtension().equals("jpg") || actionMapping.getExtension().equals("rar") || actionMapping.getExtension().equals("gif")) {
             return null;
@@ -91,6 +92,7 @@ public class DefaultActionMapper implements ActionMapper {
 //                                + actionMapping.getActionClass() + " ");
             }
         } else {
+            System.out.println("refererURL:" + actionMapping.getRefererUrl());
             log.error("not found resource", new ActionResourceException(
                     "request url :"
                             + actionMapping.getUri() + " not found resource"));

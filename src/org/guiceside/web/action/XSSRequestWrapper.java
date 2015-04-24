@@ -17,7 +17,6 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
     static{
         String path =XSSRequestWrapper.class.getClassLoader().getResource("antisamy-rule-oa.xml").getFile();
-        System.out.println("policy_filepath:"+path);
         if(path.startsWith("file")){
             path = path.substring(6);
         }
@@ -89,6 +88,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
                 str=cr.getCleanHTML();
             }
             //安全的HTML输出
+
             return str;
         } catch (ScanException e) {
             e.printStackTrace();

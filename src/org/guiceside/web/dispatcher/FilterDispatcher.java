@@ -129,7 +129,6 @@ public class FilterDispatcher implements Filter {
             }
         }
         chain.doFilter(request, response);
-
     }
 
     public Map<String, Object> createdContext(

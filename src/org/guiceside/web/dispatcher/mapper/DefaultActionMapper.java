@@ -47,7 +47,7 @@ public class DefaultActionMapper implements ActionMapper {
         actionMapping.setUri(uri);
         actionMapping.setRefererUrl(httpServletRequest.getHeader("Referer"));
         uri = perseActionExtension(uri, actionMapping, configuration);
-        if (actionMapping.getExtension().equals("xml") || actionMapping.getExtension().equals("jpg") || actionMapping.getExtension().equals("rar") || actionMapping.getExtension().equals("gif")) {
+        if (actionMapping.getExtension().equals("xml") || actionMapping.getExtension().equals("jpg") || actionMapping.getExtension().equals("rar") || actionMapping.getExtension().equals("gif")||actionMapping.getExtension().equals("dhtml")) {
             return null;
         }
         parse(uri, actionMapping);
@@ -172,7 +172,7 @@ public class DefaultActionMapper implements ActionMapper {
                     actionMapping.setExtension(extension);
                     uri = uri.substring(0, lastSlash);
                 } else {
-                    if (extension.equals("xml") || extension.equals("jpg") || extension.equals("rar") || extension.equals("gif")) {
+                    if (extension.equals("xml") || extension.equals("jpg") || extension.equals("rar") || extension.equals("gif")||extension.equals("dhtml")) {
                         actionMapping.setExtension(extension);
                     } else {
                         actionMapping.setExtension("");

@@ -8,6 +8,7 @@ import org.guiceside.GuiceSideConstants;
 import org.guiceside.commons.GlobalResult;
 import org.guiceside.commons.lang.StringUtils;
 import org.guiceside.config.Configuration;
+import org.guiceside.support.properties.PropertiesConfig;
 import org.guiceside.web.action.ActionContext;
 import org.guiceside.web.annotation.Dispatcher;
 import org.guiceside.web.annotation.PageFlow;
@@ -55,7 +56,6 @@ public class ResultInterceptor implements MethodInterceptor {
         HttpServletRequest httpServletRequest = (HttpServletRequest) actionContext.getActionContext().get(ActionContext.HTTPSERVLETREQUEST);
         HttpServletResponse httpServletResponse = (HttpServletResponse) actionContext.getActionContext().get(ActionContext.HTTPSERVLETRESPONSE);
         ServletContext servletContext = (ServletContext) actionContext.getActionContext().get(ActionContext.SERVLETCONTEXT);
-        Configuration configuration = (Configuration) servletContext.getAttribute(GuiceSideConstants.GUICE_SIDE_CONFIG);
         String path = null;
         Dispatcher dispatcher = null;
         if (method.isAnnotationPresent(PageFlow.class)) {
@@ -66,19 +66,20 @@ public class ResultInterceptor implements MethodInterceptor {
                 if (anResult.name().equals(result)) {
                     path = anResult.path();
                     dispatcher = anResult.type();
-                    isExecute = execute(actionContext, httpServletRequest, httpServletResponse, path, dispatcher, configuration);
+                    isExecute = execute(actionContext, httpServletRequest, httpServletResponse, path, dispatcher, servletContext);
                     if (isExecute) {
                         return null;
                     }
                 }
             }
+            Configuration configuration = (Configuration) servletContext.getAttribute(GuiceSideConstants.GUICE_SIDE_CONFIG);
             List<GlobalResult> globalResults = configuration.getGlobalResults();
             if (globalResults != null) {
                 for (GlobalResult globalResult : globalResults) {
                     if (globalResult.getName().equals(result)) {
                         path = globalResult.getPath();
                         dispatcher = globalResult.getType();
-                        isExecute = execute(actionContext, httpServletRequest, httpServletResponse, path, dispatcher, configuration);
+                        isExecute = execute(actionContext, httpServletRequest, httpServletResponse, path, dispatcher, servletContext);
                         if (isExecute) {
                             return null;
                         }
@@ -86,6 +87,7 @@ public class ResultInterceptor implements MethodInterceptor {
                 }
             }
         } else {
+            Configuration configuration = (Configuration) servletContext.getAttribute(GuiceSideConstants.GUICE_SIDE_CONFIG);
             boolean isExecute = false;
             List<GlobalResult> globalResults = configuration.getGlobalResults();
             if (globalResults != null) {
@@ -93,7 +95,7 @@ public class ResultInterceptor implements MethodInterceptor {
                     if (globalResult.getName().equals(result)) {
                         path = globalResult.getPath();
                         dispatcher = globalResult.getType();
-                        isExecute = execute(actionContext, httpServletRequest, httpServletResponse, path, dispatcher, configuration);
+                        isExecute = execute(actionContext, httpServletRequest, httpServletResponse, path, dispatcher, servletContext);
                         if (isExecute) {
                             return null;
                         }
@@ -114,14 +116,39 @@ public class ResultInterceptor implements MethodInterceptor {
      * @throws java.io.IOException
      * @throws ServletException
      */
-    private boolean execute(ActionContext actionContext, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String path, Dispatcher dispatcher, Configuration configuration) throws IOException, ServletException, Exception {
+    private boolean execute(ActionContext actionContext, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, String path, Dispatcher dispatcher, ServletContext servletContext) throws IOException, ServletException, Exception {
         if (dispatcher == null) {
             dispatcher = Dispatcher.Redirect;
         }
         switch (dispatcher) {
             case Redirect:
                 path = analysisPath(httpServletRequest, path);
-//                path = urlRewrite(path);
+                PropertiesConfig webConfig= (PropertiesConfig)servletContext.getAttribute("webConfig");
+                if(webConfig!=null){
+                    String secure=webConfig.getString("secure");
+                    if(StringUtils.isBlank(secure)){
+                        secure="http";
+                    }
+                    if(secure.equals("https")){
+                        if (!httpServletRequest.isSecure()) { // it is HTTP
+                            String getProtocol = httpServletRequest.getScheme();
+                            String getDomain = httpServletRequest.getServerName();
+                            String getPort = Integer.toString(httpServletRequest.getServerPort());
+                            if (getProtocol.toLowerCase().equals("http")) {
+                                String httpsPath = "https" + "://" + getDomain;
+                                if(!getPort.equals("80")){
+                                    httpsPath+=":" + getPort;
+                                }
+                                httpsPath+=path;
+                                String queryString = httpServletRequest.getQueryString();
+                                if (StringUtils.isNotBlank(queryString)){
+                                    httpsPath += '?' + queryString;
+                                }
+                                path=httpsPath;
+                            }
+                        }
+                    }
+                }
                 log(Dispatcher.Redirect.toString(), path);
                 httpServletResponse.sendRedirect(path);
                 return true;

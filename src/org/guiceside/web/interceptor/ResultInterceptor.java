@@ -123,28 +123,30 @@ public class ResultInterceptor implements MethodInterceptor {
         switch (dispatcher) {
             case Redirect:
                 path = analysisPath(httpServletRequest, path);
-                PropertiesConfig webConfig= (PropertiesConfig)servletContext.getAttribute("webConfig");
-                if(webConfig!=null){
-                    String secure=webConfig.getString("secure");
-                    if(StringUtils.isBlank(secure)){
-                        secure="http";
-                    }
-                    if(secure.equals("https")){
-                        if (!httpServletRequest.isSecure()) { // it is HTTP
-                            String getProtocol = httpServletRequest.getScheme();
-                            String getDomain = httpServletRequest.getServerName();
-                            String getPort = Integer.toString(httpServletRequest.getServerPort());
-                            if (getProtocol.toLowerCase().equals("http")) {
-                                String httpsPath = "https" + "://" + getDomain;
-                                if(!getPort.equals("80")){
-                                    httpsPath+=":" + getPort;
+                if(!path.startsWith("http")){
+                    PropertiesConfig webConfig= (PropertiesConfig)servletContext.getAttribute("webConfig");
+                    if(webConfig!=null){
+                        String secure=webConfig.getString("secure");
+                        if(StringUtils.isBlank(secure)){
+                            secure="http";
+                        }
+                        if(secure.equals("https")){
+                            if (!httpServletRequest.isSecure()) { // it is HTTP
+                                String getProtocol = httpServletRequest.getScheme();
+                                String getDomain = httpServletRequest.getServerName();
+                                String getPort = Integer.toString(httpServletRequest.getServerPort());
+                                if (getProtocol.toLowerCase().equals("http")) {
+                                    String httpsPath = "https" + "://" + getDomain;
+                                    if(!getPort.equals("80")){
+                                        httpsPath+=":" + getPort;
+                                    }
+                                    httpsPath+=path;
+                                    String queryString = httpServletRequest.getQueryString();
+                                    if (StringUtils.isNotBlank(queryString)){
+                                        httpsPath += '?' + queryString;
+                                    }
+                                    path=httpsPath;
                                 }
-                                httpsPath+=path;
-                                String queryString = httpServletRequest.getQueryString();
-                                if (StringUtils.isNotBlank(queryString)){
-                                    httpsPath += '?' + queryString;
-                                }
-                                path=httpsPath;
                             }
                         }
                     }

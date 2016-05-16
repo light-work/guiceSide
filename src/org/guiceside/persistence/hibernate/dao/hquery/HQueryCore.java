@@ -88,9 +88,10 @@ public class HQueryCore extends HQuerySupport {
                 QueryBuilder qb = fullTextSession.getSearchFactory().buildQueryBuilder().forEntity(entityClass).get();
                 Query luceneQuery= qb.keyword().onFields(getCurrentIndexFields()).matching(getCurrentMatching()).createQuery();
                 org.hibernate.search.FullTextQuery fullTextQuery=fullTextSession.createFullTextQuery(luceneQuery, entityClass).setCriteriaQuery(criteria);
-                //fullTextQuery.setMaxResults(50);
-                //fullTextQuery.setFirstResult(0);
+                fullTextQuery.setMaxResults(2);
+                fullTextQuery.setFirstResult(0);
                 result = fullTextQuery.list();
+                System.out.println(fullTextQuery.getResultSize());
             }
         }
         setCurrentObject(result);

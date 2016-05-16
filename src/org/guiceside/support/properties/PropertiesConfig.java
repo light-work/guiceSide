@@ -2,6 +2,7 @@ package org.guiceside.support.properties;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Properties;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
  * @version 1.0 2008-9-11
  *
  **/
-public class PropertiesConfig {
+public class PropertiesConfig implements Serializable{
 	private Properties properties = null;
 
 	

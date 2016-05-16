@@ -13,6 +13,20 @@ import java.util.UUID;
  * @version 1.0 $Date:200808
  **/
 public class TokenUtils {
+
+	private final static String str = "1234567890abcdefghijklmnopqrstuvwxyz";
+	private final static int pixLen = str.length();
+	private static volatile int pixOne = 0;
+	private static volatile int pixTwo = 0;
+	private static volatile int pixThree = 0;
+	private static volatile int pixFour = 0;
+
+
+	private static volatile int base64One = 0;
+	private static volatile int base64Two = 0;
+	private static volatile int base64Three = 0;
+	private static volatile int base64Four = 0;
+	private static volatile int base64Five = 0;
 	/**
 	 * 
 	 * 随即获得4位数字
@@ -135,5 +149,51 @@ public class TokenUtils {
 			return String.valueOf((char)charNumber);
 		}
 		return temp;
+	}
+
+	final public synchronized static String generate() {
+		StringBuilder sb = new StringBuilder();// 创建一个StringBuilder
+		pixFour++;
+		if (pixFour == pixLen) {
+			pixFour = 0;
+			pixThree++;
+			if (pixThree == pixLen) {
+				pixThree = 0;
+				pixTwo++;
+				if (pixTwo == pixLen) {
+					pixTwo = 0;
+					pixOne++;
+					if (pixOne == pixLen) {
+						pixOne = 0;
+					}
+				}
+			}
+		}
+		return sb.append(str.charAt(pixOne)).append(str.charAt(pixTwo)).append(str.charAt(pixThree)).append(str.charAt(pixFour)).toString();
+	}
+	final public synchronized static String generateBase(String str) {
+		StringBuilder sb = new StringBuilder();// 创建一个StringBuilder
+		int baseLength = str.length();
+		base64Five++;
+		if (base64Five == baseLength) {
+			base64Five = 0;
+			base64Four++;
+			if (base64Four == baseLength) {
+				base64Four = 0;
+				base64Three++;
+				if (base64Three == baseLength) {
+					base64Three = 0;
+					base64Two++;
+					if (base64Two == baseLength) {
+						base64Two = 0;
+						base64One++;
+						if (base64One == baseLength) {
+							base64One = 0;
+						}
+					}
+				}
+			}
+		}
+		return sb.append(str.charAt(base64One)).append(str.charAt(base64Two)).append(str.charAt(base64Three)).append(str.charAt(base64Four)).append(str.charAt(base64Five)).toString();
 	}
 }

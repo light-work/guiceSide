@@ -140,12 +140,7 @@ public class ResultInterceptor implements MethodInterceptor {
                                     if(!getPort.equals("80")){
                                         httpsPath+=":" + getPort;
                                     }
-                                    httpsPath+=path;
-                                    String queryString = httpServletRequest.getQueryString();
-                                    if (StringUtils.isNotBlank(queryString)){
-                                        httpsPath += '?' + queryString;
-                                    }
-                                    path=httpsPath;
+                                    path=httpsPath+path;
                                 }
                             }
                         }
